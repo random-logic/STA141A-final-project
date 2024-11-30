@@ -48,3 +48,24 @@ ggplot(cor_df, aes(Var1, Var2, fill = Freq)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(title = "Correlation Heatmap", x = "", y = "")
 ```
+
+## Plotting Qualitative Data
+```{r}
+library(ggplot2)
+
+# Identify qualitative variables
+qualitative_vars <- names(df)[sapply(df, is.factor) | sapply(df, is.character)]
+
+# Generate a box plot for each qualitative variable
+for (var in qualitative_vars) {
+  print(
+    ggplot(df, aes_string(x = var, y = "Exam_Score")) +
+      geom_boxplot(fill = "lightblue", color = "darkblue") +
+      labs(title = paste("Box Plot of Exam_Score by", var),
+           x = var,
+           y = "Exam_Score") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  )
+}
+```
