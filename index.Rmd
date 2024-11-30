@@ -1,0 +1,50 @@
+# Prerequisite
+## Load Data
+```{r}
+df = read.csv("StudentPerformanceFactors.csv")
+head(df)
+```
+
+## Libraries
+```{r}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+if (!require(ggplot2)) install.packages("ggplot2")
+
+library(ggplot2)
+```
+
+# 3
+## Summary Statistics
+
+```{r}
+summary(df)
+```
+
+## 2-d Scatter Plots
+
+```{r}
+# Create scatter plot matrix
+pairs(df[, sapply(df, is.numeric)],
+      main = "Scatter Plot Matrix")
+```
+
+## Heatmap
+Values closer to 0 implies no correlation, values closer to 1 implies positive, values closer to -1 implies negative correlation.
+
+```{r}
+# Compute correlation matrix
+cor_matrix <- cor(df[, sapply(df, is.numeric)], use = "complete.obs")
+
+# Convert the correlation matrix into a data frame for ggplot2
+cor_df <- as.data.frame(as.table(cor_matrix))
+
+# Plot heatmap with correlation values
+ggplot(cor_df, aes(Var1, Var2, fill = Freq)) +
+  geom_tile(color = "white") +  # Create the heatmap with white gridlines
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0,
+                       limit = c(-1, 1), name = "Correlation") +
+  geom_text(aes(label = round(Freq, 2)), color = "black", size = 4) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Correlation Heatmap", x = "", y = "")
+```
