@@ -8,30 +8,77 @@ head(df)
 ## Libraries
 ```{r}
 options(repos = c(CRAN = "https://cloud.r-project.org"))
+if (!require(dplyr)) install.packages("dplyr")
 if (!require(ggplot2)) install.packages("ggplot2")
 
+library(dplyr)
 library(ggplot2)
 ```
 
 # 3
-## Summary Statistics
+## Transform Qualitative Variables
+```{r}
+df <- df %>%
+  mutate(
+    Parental_Involvement = case_when(
+      Parental_Involvement == "Low" ~ 1,
+      Parental_Involvement == "Medium" ~ 2,
+      Parental_Involvement == "High" ~ 3
+    ),
+    Access_to_Resources = case_when(
+      Access_to_Resources == "Low" ~ 1,
+      Access_to_Resources == "Medium" ~ 2,
+      Access_to_Resources == "High" ~ 3
+    ),
+    Motivation_Level = case_when(
+      Motivation_Level == "Low" ~ 1,
+      Motivation_Level == "Medium" ~ 2,
+      Motivation_Level == "High" ~ 3
+    ),
+    Family_Income = case_when(
+      Family_Income == "Low" ~ 1,
+      Family_Income == "Medium" ~ 2,
+      Family_Income == "High" ~ 3
+    ),
+    Teacher_Quality = case_when(
+      Teacher_Quality == "Low" ~ 1,
+      Teacher_Quality == "Medium" ~ 2,
+      Teacher_Quality == "High" ~ 3
+    ),
+    Distance_from_Home = case_when(
+      Distance_from_Home == "Near" ~ 1,
+      Distance_from_Home == "Moderate" ~ 2,
+      Distance_from_Home == "Far" ~ 3
+    ),
+    Extracurricular_Activities = ifelse(Extracurricular_Activities == "Yes", 1, 0),
+    Internet_Access = ifelse(Internet_Access == "Yes", 1, 0),
+    Learning_Disabilities = ifelse(Learning_Disabilities == "Yes", 1, 0)
+  )
+```
 
+## Summary Statistics
 ```{r}
 summary(df)
 ```
 
 ## 2-d Scatter Plots
-
 ```{r}
+png("scatter_plot_matrix.png", width = 2000, height = 2000)
+
 # Create scatter plot matrix
 pairs(df[, sapply(df, is.numeric)],
-      main = "Scatter Plot Matrix")
+      main = "Scatter Plot Matrix",
+      cex.labels = 1.5)
+
+dev.off()
 ```
 
 ## Heatmap
 Values closer to 0 implies no correlation, values closer to 1 implies positive, values closer to -1 implies negative correlation.
 
 ```{r}
+png("heat_map.png", width = 1000, height = 1000)
+
 # Compute correlation matrix
 cor_matrix <- cor(df[, sapply(df, is.numeric)], use = "complete.obs")
 
@@ -47,6 +94,8 @@ ggplot(cor_df, aes(Var1, Var2, fill = Freq)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(title = "Correlation Heatmap", x = "", y = "")
+
+dev.off()
 ```
 
 ## Plotting Qualitative Data
