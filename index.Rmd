@@ -118,3 +118,23 @@ for (var in qualitative_vars) {
   )
 }
 ```
+
+# 4 Linear Model
+```{r}
+# Step 1: Create the initial linear model
+initial_model <- lm(Exam_Score ~ ., data = df)
+
+# Step 2: Check the summary for statistical significance
+summary(initial_model)
+
+# Step 3: Iteratively remove non-significant variables
+# Function to remove non-significant variables
+stepwise_model <- step(initial_model, direction = "backward", trace = FALSE)
+
+# Final model after removing non-significant variables
+summary(stepwise_model)
+
+# Extract final model formula
+final_model_formula <- formula(stepwise_model)
+print(paste("Final model formula:", final_model_formula))
+```
