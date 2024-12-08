@@ -1,0 +1,107 @@
+# Prerequisite
+## Load Data
+```{r}
+df = read.csv("StudentPerformanceFactors.csv")
+head(df)
+```
+
+## Libraries
+```{r}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+if (!require(dplyr)) install.packages("dplyr")
+if (!require(ggplot2)) install.packages("ggplot2")
+if (!require(lmtest)) install.packages("lmtest")
+if (!require(nortest)) install.packages("nortest")
+
+library(dplyr)
+library(ggplot2)
+library(lmtest)
+library(nortest)
+```
+
+# 3
+## Encode Qualitative Variables
+```{r}
+df <- df %>%
+  mutate(
+    Parental_Involvement = case_when(
+      Parental_Involvement == "Low" ~ 1,
+      Parental_Involvement == "Medium" ~ 2,
+      Parental_Involvement == "High" ~ 3
+    ),
+    Access_to_Resources = case_when(
+      Access_to_Resources == "Low" ~ 1,
+      Access_to_Resources == "Medium" ~ 2,
+      Access_to_Resources == "High" ~ 3
+    ),
+    Motivation_Level = case_when(
+      Motivation_Level == "Low" ~ 1,
+      Motivation_Level == "Medium" ~ 2,
+      Motivation_Level == "High" ~ 3
+    ),
+    Family_Income = case_when(
+      Family_Income == "Low" ~ 1,
+      Family_Income == "Medium" ~ 2,
+      Family_Income == "High" ~ 3
+    ),
+    Teacher_Quality = case_when(
+      Teacher_Quality == "Low" ~ 1,
+      Teacher_Quality == "Medium" ~ 2,
+      Teacher_Quality == "High" ~ 3
+    ),
+    Distance_from_Home = case_when(
+      Distance_from_Home == "Near" ~ 1,
+      Distance_from_Home == "Moderate" ~ 2,
+      Distance_from_Home == "Far" ~ 3
+    ),
+    Extracurricular_Activities = ifelse(Extracurricular_Activities == "Yes", 1, 0),
+    Internet_Access = ifelse(Internet_Access == "Yes", 1, 0),
+    Learning_Disabilities = ifelse(Learning_Disabilities == "Yes", 1, 0)
+  )
+```
+
+## 2-d Scatter Plots Before Transformation
+```{r}
+png("b4_plot.png", width = 2000, height = 2000)
+
+# Create scatter plot matrix
+pairs(df[, sapply(df, is.numeric)],
+      main = "Scatter Plot Matrix",
+      cex.labels = 1.5)
+
+dev.off()
+```
+
+# Diagnostics
+```{r}
+model <- lm(Exam_Score ~ ., data = df)
+```
+
+### Normality Check
+```{r}
+# Anderson-Darling Test for Residuals
+ad.test(model$residuals)
+
+# Visualize Residuals
+# Histogram of residuals
+ggplot(data.frame(residuals = model$residuals), aes(x = residuals)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "blue", alpha = 0.5) +
+  geom_density(color = "red", size = 1) +
+  ggtitle("Histogram of Residuals")
+
+# Q-Q Plot
+qqnorm(model$residuals)
+qqline(model$residuals, col = "red")
+```
+
+### Constant Variance Check
+```{r}
+# Breusch-Pagan Test
+bptest(model)  # Null hypothesis: Homoscedasticity
+
+# Residuals vs. Fitted Plot
+plot(model$fitted.values, model$residuals,
+     xlab = "Fitted Values", ylab = "Residuals",
+     main = "Residuals vs Fitted")
+abline(h = 0, col = "red")
+```

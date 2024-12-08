@@ -10,13 +10,17 @@ head(df)
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 if (!require(dplyr)) install.packages("dplyr")
 if (!require(ggplot2)) install.packages("ggplot2")
+if (!require(lmtest)) install.packages("lmtest")
+if (!require(nortest)) install.packages("nortest")
 
 library(dplyr)
 library(ggplot2)
+library(lmtest)
+library(nortest)
 ```
 
 # 3
-## Transform Qualitative Variables
+## Encode Qualitative Variables
 ```{r}
 df <- df %>%
   mutate(
@@ -54,6 +58,41 @@ df <- df %>%
     Internet_Access = ifelse(Internet_Access == "Yes", 1, 0),
     Learning_Disabilities = ifelse(Learning_Disabilities == "Yes", 1, 0)
   )
+```
+
+## Box Plot
+```{r}
+# Assuming df exists and contains the Exam_Score column
+boxplot(df$Exam_Score,
+        main = "Box Plot of Exam Scores",
+        ylab = "Exam Score",
+        col = "lightblue",
+        border = "blue")
+```
+
+## Remove Outlier
+```{r}
+# Calculate Q1, Q3, and IQR
+Q1 <- quantile(df$Exam_Score, 0.25, na.rm = TRUE)
+Q3 <- quantile(df$Exam_Score, 0.75, na.rm = TRUE)
+IQR <- Q3 - Q1
+
+# Define lower and upper bounds
+lower_bound <- Q1 - 1.5 * IQR
+upper_bound <- Q3 + 1.5 * IQR
+
+# Filter the data to exclude outliers
+df <- df[df$Exam_Score >= lower_bound & df$Exam_Score <= upper_bound, ]
+```
+
+## Box Plot After Outlier Removal
+```{r}
+# Assuming df exists and contains the Exam_Score column
+boxplot(df$Exam_Score,
+        main = "Box Plot of Exam Scores",
+        ylab = "Exam Score",
+        col = "lightblue",
+        border = "blue")
 ```
 
 ## Summary Statistics
@@ -100,8 +139,6 @@ dev.off()
 
 ## Plotting Qualitative Data
 ```{r}
-library(ggplot2)
-
 # Identify qualitative variables
 qualitative_vars <- names(df)[sapply(df, is.factor) | sapply(df, is.character)]
 
@@ -122,8 +159,37 @@ for (var in qualitative_vars) {
 # 4 Linear Model
 ```{r}
 # Step 1: Create the initial linear model
-initial_model <- lm(Exam_Score ~ ., data = df)
+model <- lm(Exam_Score ~ ., data = df)
 
 # Step 2: Check the summary for statistical significance
-summary(initial_model)
+summary(model)
+```
+
+### Normality Check
+```{r}
+# Anderson-Darling Test for Residuals
+ad.test(model$residuals)
+
+# Visualize Residuals
+# Histogram of residuals
+ggplot(data.frame(residuals = model$residuals), aes(x = residuals)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "blue", alpha = 0.5) +
+  geom_density(color = "red", size = 1) +
+  ggtitle("Histogram of Residuals")
+
+# Q-Q Plot
+qqnorm(model$residuals)
+qqline(model$residuals, col = "red")
+```
+
+### Constant Variance Check
+```{r}
+# Breusch-Pagan Test
+bptest(model)  # Null hypothesis: Homoscedasticity
+
+# Residuals vs. Fitted Plot
+plot(model$fitted.values, model$residuals,
+     xlab = "Fitted Values", ylab = "Residuals",
+     main = "Residuals vs Fitted")
+abline(h = 0, col = "red")
 ```
