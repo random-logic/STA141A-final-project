@@ -62,12 +62,24 @@ df <- df %>%
 
 ## 2-d Scatter Plots Before Transformation
 ```{r}
-png("b4_plot.png", width = 2000, height = 2000)
+# Save the plots to a single file
+png("pairplots_before.png", width = 2000, height = 2000)
 
-# Create scatter plot matrix
-pairs(df[, sapply(df, is.numeric)],
-      main = "Scatter Plot Matrix",
-      cex.labels = 1.5)
+# Setting up a multi-panel plot layout
+par(mfrow = c(ceiling(sqrt(ncol(df) - 1)), ceiling(sqrt(ncol(df) - 1))),
+    mar = c(4, 4, 2, 1))
+
+# Loop through all predictors (excluding Exam_Score)
+for (col in names(df)) {
+  if (col != "Exam_Score" && is.numeric(df[[col]])) {
+    plot(
+      df[[col]], df$Exam_Score,
+      xlab = col, ylab = "Exam_Score",
+      main = paste("Exam_Score vs", col),
+      pch = 16, col = "blue"
+    )
+  }
+}
 
 dev.off()
 ```
