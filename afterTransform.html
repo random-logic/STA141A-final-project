@@ -795,6 +795,47 @@ summary(model)</code></pre>
 ##   (142 observations deleted due to missingness)
 ## Multiple R-squared:  0.9905, Adjusted R-squared:  0.9904 
 ## F-statistic: 3.288e+04 on 20 and 6340 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code># Step 3: Get R^2
+summary(model)$r.squared</code></pre>
+<pre><code>## [1] 0.9904509</code></pre>
+</div>
+<div id="model-with-the-6-highest-correlated-variables-in-heatmap" class="section level3">
+<h3>Model with the 6 highest correlated variables in heatmap</h3>
+<pre class="r"><code># Step 1: Create the initial linear model
+model &lt;- lm(Exam_Score ~ Hours_Studied + Attendance
+            + Parental_Involvement + Access_to_Resources
+            + Previous_Scores + Tutoring_Sessions, data = df)
+
+# Step 2: Check the summary for statistical significance
+summary(model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Exam_Score ~ Hours_Studied + Attendance + Parental_Involvement + 
+##     Access_to_Resources + Previous_Scores + Tutoring_Sessions, 
+##     data = df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.0844 -0.6928  0.0132  0.7106  3.6876 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)          3.679e+01  1.405e-01  261.79   &lt;2e-16 ***
+## Hours_Studied        2.948e-01  2.232e-03  132.07   &lt;2e-16 ***
+## Attendance           1.989e-01  1.143e-03  173.91   &lt;2e-16 ***
+## Parental_Involvement 9.942e-01  1.893e-02   52.51   &lt;2e-16 ***
+## Access_to_Resources  9.776e-01  1.885e-02   51.87   &lt;2e-16 ***
+## Previous_Scores      4.812e-02  9.143e-04   52.62   &lt;2e-16 ***
+## Tutoring_Sessions    5.010e-01  1.074e-02   46.66   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.059 on 6496 degrees of freedom
+## Multiple R-squared:  0.8937, Adjusted R-squared:  0.8936 
+## F-statistic:  9102 on 6 and 6496 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code># Step 3: Get R^2
+summary(model)$r.squared</code></pre>
+<pre><code>## [1] 0.8936975</code></pre>
 </div>
 </div>
 

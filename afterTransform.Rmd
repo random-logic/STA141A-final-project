@@ -220,4 +220,21 @@ model <- lm(Exam_Score ~ ., data = df)
 
 # Step 2: Check the summary for statistical significance
 summary(model)
+
+# Step 3: Get R^2
+summary(model)$r.squared
+```
+
+### Model with the 6 highest correlated variables in heatmap
+```{r}
+# Step 1: Create the initial linear model
+model <- lm(Exam_Score ~ Hours_Studied + Attendance
+            + Parental_Involvement + Access_to_Resources
+            + Previous_Scores + Tutoring_Sessions, data = df)
+
+# Step 2: Check the summary for statistical significance
+summary(model)
+
+# Step 3: Get R^2
+summary(model)$r.squared
 ```
