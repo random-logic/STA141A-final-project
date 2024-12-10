@@ -103,7 +103,7 @@ summary(df)
 ## 2-d Scatter Plots
 ```{r}
 # Save the plots to a single file
-png("pairplots_after.png", width = 2000, height = 2000)
+png("pairplots_after.png", width = 8000, height = 8000)
 
 # Setting up a multi-panel plot layout
 par(mfrow = c(ceiling(sqrt(ncol(df) - 1)), ceiling(sqrt(ncol(df) - 1))),
