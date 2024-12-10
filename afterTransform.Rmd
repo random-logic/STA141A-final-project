@@ -103,7 +103,7 @@ summary(df)
 ## 2-d Scatter Plots
 ```{r}
 # Save the plots to a single file
-png("pairplots_after.png", width = 8000, height = 8000)
+png("pairplots_after.png", width = 720, height = 720)
 
 # Setting up a multi-panel plot layout
 par(mfrow = c(ceiling(sqrt(ncol(df) - 1)), ceiling(sqrt(ncol(df) - 1))),
@@ -115,7 +115,6 @@ for (col in names(df)) {
     plot(
       df[[col]], df$Exam_Score,
       xlab = col, ylab = "Exam_Score",
-      main = paste("Exam_Score vs", col),
       pch = 16, col = "blue"
     )
   }
@@ -128,7 +127,7 @@ dev.off()
 Values closer to 0 implies no correlation, values closer to 1 implies positive, values closer to -1 implies negative correlation.
 
 ```{r}
-png("heat_map.png", width = 1000, height = 1000)
+png("heat_map.png", width = 720, height = 720)
 
 # Compute correlation matrix
 cor_matrix <- cor(df[, sapply(df, is.numeric)], use = "complete.obs")

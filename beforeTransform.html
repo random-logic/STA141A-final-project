@@ -409,7 +409,7 @@ if (!require(dplyr)) install.packages(&quot;dplyr&quot;)</code></pre>
 ##     intersect, setdiff, setequal, union</code></pre>
 <pre class="r"><code>if (!require(ggplot2)) install.packages(&quot;ggplot2&quot;)</code></pre>
 <pre><code>## Loading required package: ggplot2</code></pre>
-<pre><code>## Keep up to date with changes at https://tidyverse.org/blog/</code></pre>
+<pre><code>## Learn more about the underlying theory at https://ggplot2-book.org/</code></pre>
 <pre class="r"><code>if (!require(lmtest)) install.packages(&quot;lmtest&quot;)</code></pre>
 <pre><code>## Loading required package: lmtest</code></pre>
 <pre><code>## Loading required package: zoo</code></pre>
@@ -470,7 +470,7 @@ library(nortest)</code></pre>
 <div id="d-scatter-plots-before-transformation" class="section level2">
 <h2>2-d Scatter Plots Before Transformation</h2>
 <pre class="r"><code># Save the plots to a single file
-png(&quot;pairplots_before.png&quot;, width = 8000, height = 8000)
+png(&quot;pairplots_before.png&quot;, width = 720, height = 720)
 
 # Setting up a multi-panel plot layout
 par(mfrow = c(ceiling(sqrt(ncol(df) - 1)), ceiling(sqrt(ncol(df) - 1))),
@@ -482,7 +482,6 @@ for (col in names(df)) {
     plot(
       df[[col]], df$Exam_Score,
       xlab = col, ylab = &quot;Exam_Score&quot;,
-      main = paste(&quot;Exam_Score vs&quot;, col),
       pch = 16, col = &quot;blue&quot;
     )
   }

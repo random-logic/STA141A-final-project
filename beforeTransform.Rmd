@@ -63,7 +63,7 @@ df <- df %>%
 ## 2-d Scatter Plots Before Transformation
 ```{r}
 # Save the plots to a single file
-png("pairplots_before.png", width = 8000, height = 8000)
+png("pairplots_before.png", width = 720, height = 720)
 
 # Setting up a multi-panel plot layout
 par(mfrow = c(ceiling(sqrt(ncol(df) - 1)), ceiling(sqrt(ncol(df) - 1))),
@@ -75,7 +75,6 @@ for (col in names(df)) {
     plot(
       df[[col]], df$Exam_Score,
       xlab = col, ylab = "Exam_Score",
-      main = paste("Exam_Score vs", col),
       pch = 16, col = "blue"
     )
   }
